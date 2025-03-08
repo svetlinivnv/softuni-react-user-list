@@ -14,7 +14,7 @@ export default function UserList() {
         userService.getAll()
             .then(result => {
                 setUsers(result);
-            });        
+            });
     }, []);
 
   return (
@@ -172,8 +172,7 @@ export default function UserList() {
             </tr>
           </thead>
           <tbody>
-            {/* <!-- Table row component --> */}
-            <UserListItem />
+            {users.map(user => <UserListItem key={user._id} {...user} />)}
           </tbody>
         </table>
       </div>

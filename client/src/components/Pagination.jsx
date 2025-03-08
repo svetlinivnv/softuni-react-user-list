@@ -6,7 +6,7 @@ export default function Pagination() {
           <select
             name="limit"
             className="limit"
-            value="5"
+            defaultValue="5"
           >
             <option value="5">5</option>
             <option value="5">10</option>
