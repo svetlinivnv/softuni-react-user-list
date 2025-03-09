@@ -33,6 +33,10 @@ export default function UserList() {
         setUserIdInfo(userId);
     }
 
+    const userInfoCloseHandler = () => {
+        setUserIdInfo(null);
+    }
+
     const saveCreateUserClickHandler = async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -59,6 +63,7 @@ export default function UserList() {
     { userIdInfo && (
             <UserInfo
                 userId={userIdInfo}
+                onClose={userInfoCloseHandler}
             />
         )};
 
