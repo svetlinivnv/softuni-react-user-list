@@ -15,6 +15,7 @@ export default function UserList() {
     const [showCreate, setShowCreate] = useState(false);
     const [userIdInfo, setUserIdInfo] = useState(null);
     const [userIdDelete, setUserIdDelete] = useState(null);
+    const [userIdEdit, setUserIdEdit] = useState(null);
 
     useEffect(() => {
         userService.getAll()
@@ -29,6 +30,7 @@ export default function UserList() {
 
     const closeCreateUserClickHandler = () => {
         setShowCreate(false);
+        setUserIdEdit(null);
     }
 
     const userInfoClickHandler = (userId) => {
@@ -41,7 +43,7 @@ export default function UserList() {
 
     const saveCreateUserClickHandler = async (e) => {
         e.preventDefault();
-        const form = e.target;
+        const form = e.target.parentElement.parentElement;
         const formData = new FormData(form);
         const userData = Object.fromEntries(formData);
 
@@ -64,6 +66,25 @@ export default function UserList() {
         setUsers(state => state.filter(user => user._id !== userIdDelete));
     
         setUserIdDelete(null);
+    }
+
+    const userEditClickHandler = async (userId) => {
+        setUserIdEdit(userId);
+    }
+
+    const saveEditUserClickHandler = async (e) => {
+        const userId = userIdEdit;
+
+        e.preventDefault();
+
+        const form = e.target.parentElement.parentElement;
+        const formData = new FormData(form);
+        const userData = Object.fromEntries(formData);
+
+        const updatedUser = await userService.update(userId, userData);
+        setUsers(state => state.map(user => user._id === userId ? updatedUser : user));
+
+        setUserIdEdit(null);
     }
 
 
@@ -90,6 +111,15 @@ export default function UserList() {
             onClose={userDeleteCloseHandler}
             onDelete={userDeleteHandler}
         /> 
+    )};
+
+    { userIdEdit && (
+            <UserCreate 
+            userId={userIdEdit}
+            onClose={closeCreateUserClickHandler}
+            onSave={saveCreateUserClickHandler}
+            onEdit={saveEditUserClickHandler}
+        />
     )};
 
       {/* <!-- Table component --> */}
@@ -246,6 +276,7 @@ export default function UserList() {
             {users.map(user => <UserListItem 
                     onInfoClick={userInfoClickHandler}
                     onDeleteClick={userDeleteClickHandler}
+                    onEditClick={userEditClickHandler}
                     key={user._id} 
                     {...user}
                 />)

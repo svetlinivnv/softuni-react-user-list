@@ -10,6 +10,7 @@ export default function UserListItem({
     imageUrl,
     onInfoClick,
     onDeleteClick,
+    onEditClick,
 }) {
     
     return (
@@ -31,6 +32,7 @@ export default function UserListItem({
           <button
             className="btn edit-btn"
             title="Edit"
+            onClick={() => onEditClick(_id)}
           >
             <svg
               aria-hidden="true"
