@@ -7,12 +7,14 @@ import Search from "./Search";
 import UserListItem from "./UserListItem";
 import UserCreate from "./UserCreate";
 import UserInfo from "./UserInfo";
+import UserDelete from "./UserDelete";
 
 export default function UserList() {
 
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
-    const [userIdInfo, setUserIdInfo] = useState();
+    const [userIdInfo, setUserIdInfo] = useState(null);
+    const [userIdDelete, setUserIdDelete] = useState(null);
 
     useEffect(() => {
         userService.getAll()
@@ -49,6 +51,22 @@ export default function UserList() {
         setShowCreate(false);
     }
 
+    const userDeleteClickHandler = (userId) => {
+        setUserIdDelete(userId);
+    }
+
+    const userDeleteCloseHandler = () => {
+        setUserIdDelete(null);
+    }
+
+    const userDeleteHandler = async () => {
+        await userService.delete(userIdDelete);
+        setUsers(state => state.filter(user => user._id !== userIdDelete));
+    
+        setUserIdDelete(null);
+    }
+
+
   return (
     <section className="card users-container">
     <Search />
@@ -66,6 +84,13 @@ export default function UserList() {
                 onClose={userInfoCloseHandler}
             />
         )};
+
+    { userIdDelete && (
+        <UserDelete 
+            onClose={userDeleteCloseHandler}
+            onDelete={userDeleteHandler}
+        /> 
+    )};
 
       {/* <!-- Table component --> */}
       <div className="table-wrapper">
@@ -218,7 +243,13 @@ export default function UserList() {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => <UserListItem onInfoClick={userInfoClickHandler} key={user._id} {...user} />)}
+            {users.map(user => <UserListItem 
+                    onInfoClick={userInfoClickHandler}
+                    onDeleteClick={userDeleteClickHandler}
+                    key={user._id} 
+                    {...user}
+                />)
+                }
           </tbody>
         </table>
       </div>

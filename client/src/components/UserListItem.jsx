@@ -9,6 +9,7 @@ export default function UserListItem({
     createdAt,
     imageUrl,
     onInfoClick,
+    onDeleteClick,
 }) {
     
     return (
@@ -50,6 +51,7 @@ export default function UserListItem({
           <button
             className="btn delete-btn"
             title="Delete"
+            onClick={ () => onDeleteClick(_id) }
           >
             <svg
               aria-hidden="true"
